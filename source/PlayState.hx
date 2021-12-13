@@ -393,6 +393,145 @@ class PlayState extends MusicBeatState
 					stageCurtains.updateHitbox();
 					add(stageCurtains);
 				}
+                       case 'playroomblurry':
+				defaultCamZoom = 0.8;
+				
+				var bg:BGSprite = new BGSprite('playroombgblurry', -200, -300, 1.0, 1.0);
+				bg.updateHitbox();
+				bg.antialiasing = true;
+				add(bg);
+				
+			case 'playroom':
+				GameOverSubstate.deathSoundName = 'Jeffydeath';
+				GameOverSubstate.characterName = 'jeffyDead';
+				GameOverSubstate.loopSoundName = 'Dead';
+				
+				var bg:BGSprite = new BGSprite('playroombg', -200, -300, 1.0, 1.0);
+				bg.updateHitbox();
+				bg.antialiasing = true;
+				add(bg);
+				
+				ligt = new FlxSprite( -200, -300).loadGraphic(Paths.image('spotlight'));
+				ligt.antialiasing = true;
+				ligt.scrollFactor.set(0.3, 0.3);
+				ligt.visible = false;
+				add(ligt);
+
+			
+			case 'kitchen':
+				GameOverSubstate.deathSoundName = 'marvindeath';
+				GameOverSubstate.characterName = 'marvin';
+				GameOverSubstate.loopSoundName = 'Dead';
+				
+				var bg:BGSprite = new BGSprite('kitchen', -1000, -500, 1.0, 1.0);
+				bg.updateHitbox();
+				bg.antialiasing = true;
+				add(bg);
+				
+				var MayoHit:FlxSprite = new FlxSprite(99999, 9999);
+				MayoHit.frames = Paths.getSparrowAtlas('characters/MayoSprite');
+				MayoHit.animation.addByPrefix('MayoHit', 'Mayo', 24, false);
+				add(MayoHit);
+
+				
+			case 'JeffyStage':
+				defaultCamZoom = 1.0;
+				
+				var jeffybg:BGSprite = new BGSprite('Jeffy/Jeffybg', 0, 0, 1.0, 1.0);
+				jeffybg.active = false;
+				jeffybg.antialiasing = true;
+				jeffybg.updateHitbox();
+				add(jeffybg);
+				
+				
+				var geeduhraffe:FlxSprite = new FlxSprite(-70, -40);
+				geeduhraffe.frames = Paths.getSparrowAtlas('Jeffy/geeduhraffe');
+				geeduhraffe.animation.addByPrefix('bop', 'geeduhraffe', 24, true);
+				geeduhraffe.antialiasing = true;
+				geeduhraffe.animation.play('bop');
+				add(geeduhraffe);
+					
+					if(FlxG.save.data.distractions)
+						add(geeduhraffe);
+						
+				case 'JeffyConcert':
+				
+				curStage = 'JeffyConcert';
+				defaultCamZoom = 0.7;
+				
+				var bg:FlxSprite = new FlxSprite(-300, -190).loadGraphic(Paths.image('Jeffy/JeffyConcertBg'));
+				bg.scrollFactor.set(0.2, 0.2);
+				add(bg);
+				bg.active = false;
+				bg.updateHitbox();
+				
+				var bg:FlxSprite = new FlxSprite(-350, -190).loadGraphic(Paths.image('Jeffy/JeffyBgTrees'));
+				bg.scrollFactor.set(0.4, 0.4);
+				add(bg);
+				bg.active = false;
+				bg.updateHitbox();
+				
+				var bg:FlxSprite = new FlxSprite(-480, -190).loadGraphic(Paths.image('Jeffy/JeffyConcertBgB'));
+				bg.scrollFactor.set(1.0, 1.0);
+				add(bg);
+				bg.active = false;
+				bg.updateHitbox();
+				
+				
+				var speakersbounce:FlxSprite = new FlxSprite(-480 , -100);
+					speakersbounce.frames = Paths.getSparrowAtlas('Jeffy/JeffySpeakers');
+					speakersbounce.animation.addByPrefix('Speak', 'Speakerts Bouncy instance 1', 24, true);
+					speakersbounce.animation.play('Speak');
+					speakersbounce.scrollFactor.set(1.0, 1.0);
+					add(speakersbounce);
+				
+				var crowdjumpin:FlxSprite = new FlxSprite(-200 , 100);
+					crowdjumpin.frames = Paths.getSparrowAtlas('Jeffy/Crowd');
+					crowdjumpin.animation.addByPrefix('Marvin', 'Bouncy', 24, true);
+					crowdjumpin.animation.play('Marvin');
+					crowdjumpin.scrollFactor.set(0.9, 0.9);
+					add(crowdjumpin);
+				
+				var bg:FlxSprite = new FlxSprite(-260, -190).loadGraphic(Paths.image('Jeffy/TopLights'));
+				bg.scrollFactor.set(0.9, 0.9);
+				add(bg);
+				bg.active = false;
+				bg.updateHitbox();
+						
+			case 'Hallway':
+				
+				GameOverSubstate.deathSoundName = 'marvindeath';
+				GameOverSubstate.characterName = 'marvin';
+				GameOverSubstate.loopSoundName = 'Dead';
+				
+				defaultCamZoom = 0.7;
+				
+				
+				var floor:FlxSprite = new FlxSprite(0, 670);
+				floor.frames = Paths.getSparrowAtlas('DJ/FloorSprites');
+				floor.animation.addByPrefix('floorMove', 'floorr', 24, true);
+				floor.antialiasing = true;
+				floor.animation.play('floorMove');
+				add(floor);
+				
+				var bg:BGSprite = new BGSprite('DJ/hallwalls', 0, 0, 1.0, 1.0);
+				bg.updateHitbox();
+				bg.antialiasing = true;
+				add(bg);
+				
+				var door:FlxSprite = new FlxSprite(-407, -1297);
+				door.frames = Paths.getSparrowAtlas('DJ/DoorSprites');
+				door.animation.addByPrefix('doorsmove', 'doors', 24, true);
+				door.antialiasing = true;
+				door.animation.play('doorsmove');
+				add(door);
+				
+				var shadows:BGSprite = new BGSprite('DJ/shading', 0, 0, 1.0, 1.0);
+				shadows.updateHitbox();
+				shadows.antialiasing = true;
+				add(shadows);
+
+                                }
 
 			case 'spooky': //Week 2
 				if(!ClientPrefs.lowQuality) {
