@@ -533,6 +533,7 @@ class PlayState extends MusicBeatState
 
                                 }
 
+                       }
 			case 'spooky': //Week 2
 				if(!ClientPrefs.lowQuality) {
 					halloweenBG = new BGSprite('halloween_bg', -200, -100, ['halloweem bg0', 'halloweem bg lightning strike']);
@@ -3607,34 +3608,48 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function goodNoteHit(note:Note):Void
+		function goodNoteHit(note:Note):Void
 	{
 		if (!note.wasGoodHit)
 		{
-			if(cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
-
-			if(note.hitCausesMiss) {
-				noteMiss(note);
-				if(!note.noteSplashDisabled && !note.isSustainNote) {
-					spawnNoteSplashOnNote(note);
-				}
-
-				switch(note.noteType) {
-					case 'Hurt Note': //Hurt note
-						if(boyfriend.animation.getByName('hurt') != null) {
-							boyfriend.playAnim('hurt', true);
-							boyfriend.specialAnim = true;
-						}
-				}
+			
+			switch(note.noteType) {
+			case 'Hurt Note': //Hurt note
 				
-				note.wasGoodHit = true;
+			dad.playAnim('MayonnaiseThrow');
+			
+			var MayoHit:FlxSprite = new FlxSprite(FlxG.random.int(-50, 800), FlxG.random.int(-100, 500));
+			MayoHit.frames = Paths.getSparrowAtlas('characters/MayoSprite');
+			MayoHit.cameras = [camHUD];
+			MayoHit.animation.addByPrefix('MayoHit', 'Mayo', 24, false);
+			FlxG.sound.play(Paths.sound('MayoSound'));
+			MayoHit.animation.play('MayoHit');
+		
+			new FlxTimer().start(1 / 4, function(tmr:FlxTimer)
+			{
+				add(MayoHit);
+			});
+
+			
+			new FlxTimer().start(6, function(tmr:FlxTimer)
+			{
+				remove(MayoHit);
+			});
+			
+			
+				
+			note.wasGoodHit = true;
+				if(!note.noteSplashDisabled && !note.isSustainNote) {
+			spawnNoteSplashOnNote(note);
+				}
 				if (!note.isSustainNote)
 				{
-					note.kill();
-					notes.remove(note, true);
-					note.destroy();
+			note.kill();
+			notes.remove(note, true);
+			note.destroy();
 				}
-				return;
+			
+					return;
 			}
 
 			if (!note.isSustainNote)
@@ -3645,43 +3660,33 @@ class PlayState extends MusicBeatState
 			}
 			health += note.hitHealth;
 
-			if(!note.noAnimation) {
-				var daAlt = '';
-				if(note.noteType == 'Alt Animation') daAlt = '-alt';
-	
-				var animToPlay:String = '';
-				switch (Std.int(Math.abs(note.noteData)))
-				{
-					case 0:
-						animToPlay = 'singLEFT';
-					case 1:
-						animToPlay = 'singDOWN';
-					case 2:
-						animToPlay = 'singUP';
-					case 3:
-						animToPlay = 'singRIGHT';
+			var daAlt = '';
+			if(note.noteType == 'Alt Animation') daAlt = '-alt';
+
+			var animToPlay:String = '';
+			switch (Std.int(Math.abs(note.noteData)))
+			{
+				case 0:
+					animToPlay = 'singLEFT';
+				case 1:
+					animToPlay = 'singDOWN';
+				case 2:
+					animToPlay = 'singUP';
+				case 3:
+					animToPlay = 'singRIGHT';
+			}
+			boyfriend.playAnim(animToPlay + daAlt, true);
+			if(note.noteType == 'Hey!') {
+				if(boyfriend.animOffsets.exists('hey')) {
+					boyfriend.playAnim('hey', true);
+					boyfriend.specialAnim = true;
+					boyfriend.heyTimer = 0.6;
 				}
 
-				if(note.noteType == 'GF Sing') {
-					gf.playAnim(animToPlay + daAlt, true);
-					gf.holdTimer = 0;
-				} else {
-					boyfriend.playAnim(animToPlay + daAlt, true);
-					boyfriend.holdTimer = 0;
-				}
-
-				if(note.noteType == 'Hey!') {
-					if(boyfriend.animOffsets.exists('hey')) {
-						boyfriend.playAnim('hey', true);
-						boyfriend.specialAnim = true;
-						boyfriend.heyTimer = 0.6;
-					}
-	
-					if(gf.animOffsets.exists('cheer')) {
-						gf.playAnim('cheer', true);
-						gf.specialAnim = true;
-						gf.heyTimer = 0.6;
-					}
+				if(gf.animOffsets.exists('cheer')) {
+					gf.playAnim('cheer', true);
+					gf.specialAnim = true;
+					gf.heyTimer = 0.6;
 				}
 			}
 
@@ -3700,6 +3705,7 @@ class PlayState extends MusicBeatState
 					}
 				});
 			}
+
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
@@ -3710,9 +3716,17 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
+				if(cpuControlled) {
+					boyfriend.holdTimer = 0;
+				}
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
+			} else if(cpuControlled) {
+				var targetHold:Float = Conductor.stepCrochet * 0.001 * boyfriend.singDuration;
+				if(boyfriend.holdTimer + 0.2 > targetHold) {
+					boyfriend.holdTimer = targetHold - 0.2;
+                               }
 			}
 		}
 	}
